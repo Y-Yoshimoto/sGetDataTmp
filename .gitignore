@@ -1,0 +1,5 @@
+*.pem
+*.crt
+*.csr
+.env
+./influxdb_c/data/*
