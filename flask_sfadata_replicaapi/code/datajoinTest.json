@@ -1,0 +1,19 @@
+{
+    "mainCollection": {
+        "collection": "LoginHistory",
+        "joinField": "UserId",
+        "columns": [
+            "LoginTime",
+            "SourceIp"
+        ]
+    },
+    "subCollection": {
+        "collection": "User",
+        "joinField": "Id",
+        "columns": [
+            "Username",
+            "Name",
+            "Email"
+        ]
+    }
+}
