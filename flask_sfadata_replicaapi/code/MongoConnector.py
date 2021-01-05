@@ -71,50 +71,21 @@ class Connector:
         return datas
 
     # 期間指定検索
-    def searchDatePeriodFilter(self, collectionName, dateColumn, startDate, EndDate):
+    def searchDatePeriodFilter(self, collectionName, dateColumn, startDate, endDate):
         self.collection = self.db[collectionName]
         assert self.collection is not None
-        print("Search Collection: " + startDate + " - " + EndDate, flush=True)
-        dateFilter= {dateColumn :{"$gte": str(startDate), "$lte": str(EndDate)}}
+        print("Search Collection: " + startDate + " - " + endDate, flush=True)
+        dateFilter= {dateColumn :{"$gte": str(startDate), "$lte": str(endDate)}}
         datas = [data for data in self.collection.find(dateFilter, {'_id': False}, sort = [(dateColumn, ASCENDING)])]
         return datas
 
-    # 複合検索
-    def joinsearchDataTest(self, mainCollection, mainCField, subCollection, subCField):
-        self.collection = self.db[mainCollection]
-        assert self.collection is not None
-
-        print("Search Collection", flush=True)
-        ## 結合ルール
-        lookup={"$lookup":
-        {
-            "from":subCollection,
-            "localField": mainCField,
-            "foreignField":subCField,
-            "as":subCollection
-        }}
-        ## subコレクションデータの配列解除
-        unwind={"$unwind": "$"+subCollection}
-        ## 必要なカラムの取り出し
-        project={"$project":
-                {
-                    "LoginTime":"$LoginTime",
-                    "SourceIp": "$SourceIp",
-                    "Username": "$User.Username",
-                    "Name": "$User.Name",
-                    "_id": False
-                }
-            }
-        datas = [data for data in self.collection.aggregate([lookup, unwind, project])]
-        print(str(datas[0]), flush=True)
-        return 0
-
+    ####  複合検索-カラム作成 ############ 
     def makeColumnsProject(self, mainColumns, subColumns, subCollectionName):
         columns = {}
         # メインコレクションカラム
         for column in mainColumns:
             #print(str(column), flush=True)
-            columns[column] = column
+            columns[column] = "$" + column
         # サブコレクションカラム
         for column in subColumns:
             #print(str(column), flush=True)
@@ -124,10 +95,8 @@ class Connector:
         project={"$project": columns}
         return project
 
-    def joinsearchData(self, mainCollection, subCollection):
-        self.collection = self.db[mainCollection["collection"]]
-        assert self.collection is not None
-        ## 結合ルール
+    ####  複合検索-結合ルール作成 ############ 
+    def makeJoinLookup(self, mainCollection, subCollection):
         lookup={"$lookup":
         {
             "from":subCollection["collection"],
@@ -135,6 +104,14 @@ class Connector:
             "foreignField":subCollection["joinField"],
             "as":subCollection["collection"]
         }}
+        return lookup
+
+    ####  複合検索 
+    def joinsearchData(self, mainCollection, subCollection):
+        self.collection = self.db[mainCollection["collection"]]
+        assert self.collection is not None
+        ## 結合ルール
+        lookup = self.makeJoinLookup(mainCollection, subCollection)
         ## subコレクションデータの配列解除
         unwind={"$unwind": "$"+subCollection["collection"]}
         ## 必要なカラムの取り出し
@@ -143,4 +120,32 @@ class Connector:
         print("lookup Info: " + str(lookup), flush=True)
         print("project Info: " + str(project), flush=True)
         datas = [data for data in self.collection.aggregate([lookup, unwind, project])]
+        return datas
+
+    ####  複合検索-期間指定
+    def joinsearchDataPeriod(self, mainCollection, subCollection,datePeriod):
+        self.collection = self.db[mainCollection["collection"]]
+        assert self.collection is not None
+        ## 結合ルール
+        lookup = self.makeJoinLookup(mainCollection, subCollection)
+        ## subコレクションデータの配列解除
+        unwind={"$unwind": "$"+subCollection["collection"]}
+        ## 必要なカラムの取り出し
+        project=self.makeColumnsProject(mainCollection["columns"], subCollection["columns"], subCollection["collection"])
+
+        print("lookup Info: " + str(lookup), flush=True)
+        print("project Info: " + str(project), flush=True)
+
+        #dateFilter= {dateColumn :{"$gte": str(startDate), "$lte": str(EndDate)}}
+        dateFilter= {"$match": {datePeriod["dateColumn"] :{"$gte": datePeriod["startDate"], "$lte": datePeriod["endDate"]}}}
+        print("dateFilter Info: " + str(dateFilter), flush=True)
+
+        datas = [data for data in self.collection.aggregate([lookup, dateFilter, unwind, project])]
+        print("dateFilter Info: " + str([lookup, dateFilter, unwind, project]), flush=True)
+        return datas
+
+    def pipelineQuery(self, CollectionName, pipeline):
+        self.collection = self.db[CollectionName]
+        assert self.collection is not None
+        datas = [data for data in self.collection.aggregate(pipeline)]
         return datas

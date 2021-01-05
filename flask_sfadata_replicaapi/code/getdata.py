@@ -33,6 +33,7 @@ def Columns_get(sObject):
     datas=sObjectBR.MongoC.searchSingleFilter("sObjectColumns", "sObject", sObject)
     return sObjectBR.responseResult(datas)
 
+############### 単一データ取得 ###############
 # 全データ検索
 @app.route('/data/all/<sObject>', methods=['GET'])
 def all_get(sObject):
@@ -51,12 +52,30 @@ def period_get(sObject):
     ## レスポンス
     return sObjectBR.responseResult(datas)
 
+############### 複合データ取得 ###############
 @app.route('/data/join', methods=['POST'])
 def join_get():
     body = json.loads(request.get_data().decode().strip())
-    #print(str(joinqe["mainCollection"]), flush=True)
-
     ## DB検索
     datas=sObjectBR.MongoC.joinsearchData(body["mainCollection"],body["subCollection"])
+    ## レスポンス
+    return sObjectBR.responseResult(datas)
+
+@app.route('/data/period/join', methods=['POST'])
+def joinPeriod_get():
+    body = json.loads(request.get_data().decode().strip())
+
+    ## DB検索
+    datas=sObjectBR.MongoC.joinsearchDataPeriod(body["mainCollection"],body["subCollection"],body["datePeriod"])
+    ## レスポンス
+    return sObjectBR.responseResult(datas)
+
+############### パイプライン指定 ###############
+@app.route('/data/pipeline/<sObject>', methods=['POST'])
+def pipeline_get(sObject):
+    pipeline = json.loads(request.get_data().decode().strip())
+    # pipeline
+    print(str(pipeline), flush=True)
+    datas=sObjectBR.MongoC.pipelineQuery(sObject, pipeline)
     ## レスポンス
     return sObjectBR.responseResult(datas)

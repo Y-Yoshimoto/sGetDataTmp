@@ -1,0 +1,31 @@
+[
+    {
+        "$lookup": {
+            "from": "User",
+            "localField": "UserId",
+            "foreignField": "Id",
+            "as": "User"
+        }
+    },
+    {
+        "$match": {
+            "LoginTime": {
+                "$gte": "2021-01-03",
+                "$lte": "2021-01-04"
+            }
+        }
+    },
+    {
+        "$unwind": "$User"
+    },
+    {
+        "$project": {
+            "LoginTime": "$LoginTime",
+            "SourceIp": "$SourceIp",
+            "Username": "$User.Username",
+            "Name": "$User.Name",
+            "Email": "$User.Email",
+            "_id": "False"
+        }
+    }
+]
