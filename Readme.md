@@ -20,3 +20,8 @@ curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127
 
 ### パイプライン指定検索
 curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/data/pipeline/LoginHistory  -d @./flask_sfadata_replicaapi/code/pipelineQuery.json
+
+### パイプライン指定検索-単一オブジェクト
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/data/pipeline/User  -d @./flask_sfadata_replicaapi/code/pipelineQuerySingle.json
+### パイプライン指定検索-グループ
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:5000/data/pipeline/LoginHistory  -d @./flask_sfadata_replicaapi/code/pipelineQueryGroup.json

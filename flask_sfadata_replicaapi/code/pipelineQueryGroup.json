@@ -19,19 +19,19 @@
         "$unwind": "$User"
     },
     {
-        "$project": {
-            "LoginTime": "$LoginTime",
-            "SourceIp": "$SourceIp",
-            "Application": "$Application",
-            "Username": "$User.Username",
-            "Name": "$User.Name",
-            "Email": "$User.Email",
-            "_id": "False"
-        }
-    },
-    {
-        "$sort": {
-            "LoginTime": 1
+        "$group": {
+            "_id": "$Application",
+            "count": {
+                "$sum": 1
+            },
+            "data": {
+                "$push": {
+                    "LoginTime": "$LoginTime",
+                    "SourceIp": "$SourceIp",
+                    "Name": "$User.Name",
+                    "Email": "$User.Email"
+                }
+            }
         }
     }
 ]

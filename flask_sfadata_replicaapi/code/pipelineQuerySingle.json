@@ -1,0 +1,15 @@
+[
+    {
+        "$match": {
+            "UserType": "Standard"
+        }
+    },
+    {
+        "$project": {
+            "Username": "$Username",
+            "Name": "$Name",
+            "Email": "$Email",
+            "_id": "False"
+        }
+    }
+]
