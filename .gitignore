@@ -3,3 +3,5 @@
 *.csr
 .env
 ./influxdb_c/data/*
+./boxuploader/code/.config.json
+./boxuploader/code/__pycache__/*

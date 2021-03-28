@@ -71,8 +71,24 @@ def joinPeriod_get():
     return sObjectBR.responseResult(datas)
 
 ############### パイプライン指定 ###############
-@app.route('/data/pipeline/<sObject>', methods=['POST'])
-def pipeline_get(sObject):
+@app.route('/data/pipeline/<pipelineName>', methods=['GET'])
+def pipelineLoad(pipelineName):
+    ## パイプラインファイル読み込み
+    pipelinePathName = './piplineQuery/' + pipelineName + '.json'
+    pipelineInfo = json.load(open(pipelinePathName, 'r'))
+    ## 主オブジェクトとクエリーの読み込み
+    sObject=pipelineInfo['mainsObject']
+    pipeline=pipelineInfo['pipeline']
+    ## パイプライン表示
+    print(str(pipeline), flush=True)
+    ## データ取得
+    datas=sObjectBR.MongoC.pipelineQuery(sObject, pipeline)
+    ## レスポンス
+    return sObjectBR.responseResult(datas)
+
+############### パイプラインPOST ###############
+@app.route('/data/pipeline/post/<sObject>', methods=['POST'])
+def pipeline_post(sObject):
     pipeline = json.loads(request.get_data().decode().strip())
     # pipeline
     print(str(pipeline), flush=True)

@@ -1,9 +1,8 @@
 version: "3"
-
 services:
-    sfa_get_sodata:
-        build: sfa_get_sodata
-        image: sfa_get_sodata
+    sfadata_replica:
+        build: sfadata_replica
+        image: sfadata_replica
         restart: always
         #restart: "no"
         environment:
@@ -13,6 +12,8 @@ services:
             JWTKEYFILE: ${JWTKEYFILE}
         logging:
             driver: ${LOGDRIVER}
+        volumes:
+            - uploadvolume:/uploadvolume
     mongo:
         image: mongodb_custom
         build: mongodb_custom
@@ -47,9 +48,31 @@ services:
         volumes:
             - ./flask_sfadata_replicaapi/code:/code
         ports:
-            - "5000:5000"
+            - "35000:5000"
         environment:
             TZ: Asia/Tokyo
             PYTHONDONTWRITEBYTECODE: 1
             FLASK_DEBUG: "True"
             FLASK_ENV: development
+
+    boxuploader:
+        image: boxuploader
+        build: boxuploader
+        ports:
+            - "35001:5000"
+        # restart: always
+        restart: "no"
+        environment:
+            TZ: ${TZ}
+            BOX_USER_ID: ${BOX_USER_ID}
+            BOX_UPLOADFOLDER_ID: ${BOX_UPLOADFOLDER_ID}
+            BOX_PIPELINEDATA_ID: ${BOX_PIPELINEDATA_ID}
+            BOX_QUERYALLDATA_ID: ${BOX_QUERYALLDATA_ID}
+            PYTHONDONTWRITEBYTECODE: 1
+            FLASK_DEBUG: "True"
+            FLASK_ENV: development
+        volumes:
+            - ./boxuploader/code:/code
+            - uploadvolume:/uploadvolume
+volumes:
+    uploadvolume:

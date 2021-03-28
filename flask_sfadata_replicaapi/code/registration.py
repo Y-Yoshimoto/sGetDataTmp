@@ -32,7 +32,7 @@ class SObjectBulkRegistration:
 
 #　Blueprint　#######################################################################################
 sObjectBR = SObjectBulkRegistration()
-@app.route('/registration/<sObject>/', methods=['POST'])
+@app.route('/registration/<sObject>', methods=['POST'])
 def registration_post(sObject):
     body = request.get_data().decode().strip()
     #print(body, flush=True)
