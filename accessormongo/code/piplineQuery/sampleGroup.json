@@ -1,0 +1,37 @@
+[
+    {
+        "$lookup": {
+            "from": "User",
+            "localField": "UserId",
+            "foreignField": "Id",
+            "as": "User"
+        }
+    },
+    {
+        "$match": {
+            "LoginTime": {
+                "$gte": "2019-01-01",
+                "$lte": "2022-01-01"
+            }
+        }
+    },
+    {
+        "$unwind": "$User"
+    },
+    {
+        "$group": {
+            "_id": "$Application",
+            "count": {
+                "$sum": 1
+            },
+            "data": {
+                "$push": {
+                    "LoginTime": "$LoginTime",
+                    "SourceIp": "$SourceIp",
+                    "Name": "$User.Name",
+                    "Email": "$User.Email"
+                }
+            }
+        }
+    }
+]

@@ -38,15 +38,15 @@ curl --noproxy "*" -L 'http://127.0.0.1:35000/data/period/Opportunity?dateColumn
 curl --noproxy "*" -L http://127.0.0.1:35000/data/pipeline/sample
 
 ### 結合データ取得
-curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/join  -d @./flask_sfadata_replicaapi/code/datajoinTest.json
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/join  -d @./accessormongo/code/datajoinTest.json
 
 ### 期間指定
-curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/period/join  -d @./flask_sfadata_replicaapi/code/datajoinTest.json
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/period/join  -d @./accessormongo/code/datajoinTest.json
 
 ### パイプライン指定検索
-curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/LoginHistory  -d @./flask_sfadata_replicaapi/code/pipelineQuery.json
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/LoginHistory  -d @./accessormongo/code/pipelineQuery.json
 
 ### パイプライン指定検索-単一オブジェクト
-curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/User  -d @./flask_sfadata_replicaapi/code/pipelineQuerySingle.json
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/User  -d @./accessormongo/code/pipelineQuerySingle.json
 ### パイプライン指定検索-グループ
-curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/LoginHistory  -d @./flask_sfadata_replicaapi/code/pipelineQueryGroup.json
+curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://127.0.0.1:35000/data/pipeline/post/LoginHistory  -d @./accessormongo/code/pipelineQueryGroup.json

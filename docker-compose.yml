@@ -41,12 +41,12 @@ services:
         logging:
             driver: ${LOGDRIVER}
 
-    flask_sfadata_replicaapi:
-        image: flask_sfadata_replicaapi
-        build: flask_sfadata_replicaapi
+    accessormongo:
+        image: accessormongo
+        build: accessormongo
         restart: always
         volumes:
-            - ./flask_sfadata_replicaapi/code:/code
+            - ./accessormongo/code:/code
         ports:
             - "35000:5000"
         environment:

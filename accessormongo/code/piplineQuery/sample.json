@@ -1,0 +1,40 @@
+{
+    "mainsObject": "LoginHistory",
+    "pipeline": [
+        {
+            "$lookup": {
+                "from": "User",
+                "localField": "UserId",
+                "foreignField": "Id",
+                "as": "User"
+            }
+        },
+        {
+            "$match": {
+                "LoginTime": {
+                    "$gte": "2019-01-01",
+                    "$lte": "2022-01-01"
+                }
+            }
+        },
+        {
+            "$unwind": "$User"
+        },
+        {
+            "$project": {
+                "LoginTime": "$LoginTime",
+                "SourceIp": "$SourceIp",
+                "Application": "$Application",
+                "Username": "$User.Username",
+                "Name": "$User.Name",
+                "Email": "$User.Email",
+                "_id": "False"
+            }
+        },
+        {
+            "$sort": {
+                "LoginTime": 1
+            }
+        }
+    ]
+}
