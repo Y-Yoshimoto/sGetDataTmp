@@ -12,6 +12,6 @@ fi
 upDataJq=$1"_result.json"
 upDataPath="./uploadvolume/"$upDataJq
 # MongoDBへのクエリー発行
-curl --noproxy "*" -sS -L -X GET -o upDataPath http://localhost:35000/data/pipeline/$1 > $upDataPath
+curl --noproxy "*" -S -L -X GET -o $upDataPath http://localhost:35000/data/pipeline/$1
 # Boxに取得結果を保存
-curl --noproxy "*" -sS -L -X POST -o /dev/null http://localhost:35001/upload/pipelinedata/$upDataJq 
+curl --noproxy "*" -S -L -X POST http://localhost:35001/upload/pipelinedata/$upDataJq 

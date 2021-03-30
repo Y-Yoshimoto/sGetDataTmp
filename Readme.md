@@ -22,6 +22,9 @@
     cp .env.prot .env
     環境変数ファイルをコピーし、それぞれの指定
 
+## LogCheck
+docker-compose logs -f boxuploader sfadata_replica
+
 ## API
 ### カラム情報取得
 curl --noproxy "*" -L http://127.0.0.1:35000/Columns/Account

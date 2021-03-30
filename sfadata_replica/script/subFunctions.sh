@@ -46,7 +46,7 @@ function getSOQLData(){
     SECONDS=0
     # エクスポート先ファイル指定 $1: sObuject名
     SOQLFile=$CnfFiles"/""Select"$1".soql"      #SOQL
-    ROWdataJq=$RowDataFiles"/Row"$1"Data.json"  #RowData
+    ROWdataJq=$RowDataFiles"/"$1"_ROW.json"  #RowData
     dataJq=$DataFiles"/"$1"_data.json"           #Data
                     
     # SOQL発行/データ取得/結果取り出し
@@ -69,12 +69,12 @@ function getSOQLData(){
 
 function dataRegistration(){
     #curl --noproxy "*" http://accessormongo:5000/healthCheck
-    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" -o /dev/null http://accessormongo:5000/registration/$1 -d @./$DataFiles/$1Data.json
+    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" -o /dev/null http://accessormongo:5000/registration/$1 -d @$dataJq
     return 0
 }
 
 function dataUploadBox(){
-    dataJq=$DataFiles"/"$1"Data.json"
+    dataJq=$DataFiles"/"$1"_data.json"
     upDataJq=$1"_data.json"
     \cp -f $dataJq $UPLOADFOLDER"/"$upDataJq
     curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/queryalldata/$upDataJq 
@@ -86,7 +86,7 @@ function getPipeline(){
     upDataJq=$1"_result.json"
     upDataPath=$UPLOADFOLDER"/"$upDataJq
     # データベースからパイプラインクエリー結果を取得し保存
-    curl --noproxy "*" -sS -L -X GET -o upDataPath http://accessormongo:5000/data/pipeline/$1 > $upDataPath
+    curl --noproxy "*" -sS -L -X GET -o $upDataPath http://accessormongo:5000/data/pipeline/$1
     # Boxに取得結果を保存
     curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/pipelinedata/$upDataJq 
     echo $(dateFormat)", "$SECONDS", Update pipeline Data to Box, "$1
