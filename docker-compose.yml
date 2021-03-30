@@ -13,7 +13,7 @@ services:
         logging:
             driver: ${LOGDRIVER}
         volumes:
-            - uploadvolume:/uploadvolume
+            - ./uploadvolume:/uploadvolume
     mongo:
         image: mongodb_custom
         build: mongodb_custom
@@ -73,6 +73,6 @@ services:
             FLASK_ENV: development
         volumes:
             - ./boxuploader/code:/code
-            - uploadvolume:/uploadvolume
-volumes:
-    uploadvolume:
+            - ./uploadvolume:/uploadvolume
+#volumes:
+#    uploadvolume:
