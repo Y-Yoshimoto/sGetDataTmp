@@ -46,6 +46,14 @@ do
     wait
     echo $(dateFormat)", "$SECONDS",End Update Pipeline Data"
     echo $(dateFormat)", "$SECONDS",Complete Update Data"
-    #sleep 28800
-    sleep 14400
+
+    # AM1時から8時間(28800秒)毎に実行
+    tomorrow=$(date '+%Y-%m-%d' -d 'tomorrow')
+    # 翌日1時までの秒数を算出
+    intervalDay=$(expr $(date +%s -d $tomorrow) - $(date +%s -d '1 hour ago'))
+    # 8時間の間隔の区切り時間までの残り時間を算出
+    sleeptime=$(($intervalDay % 28800))
+    # プロセススリープ
+    echo $(dateFormat)", "$SECONDS", "$sleeptime" Seconds wait"
+    sleep $sleeptime
 done
