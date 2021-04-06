@@ -24,10 +24,10 @@ class SObjectBulkRegistration:
         #print(jqbody[0], flush=True)
         self.MongoC.dropCollection(sObject)
         self.MongoC.checkCollection(sObject, "Id")
-        self.MongoC.insertBulkdata(sObject, jqbody)
+        NumberOfRecords = self.MongoC.insertBulkdata(sObject, jqbody)
 
         #print(jqbody[0], flush=True)
-        return (jsonify({'status':0}), 200)
+        return (jsonify({'status':200, 'sObject': sObject, 'Records': NumberOfRecords, 'API': 'MongoDB Registration'}), 200)
 
 
 #　Blueprint　#######################################################################################

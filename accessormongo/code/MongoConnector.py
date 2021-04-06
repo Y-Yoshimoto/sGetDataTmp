@@ -52,6 +52,7 @@ class Connector:
         #assert self.collection.count_documents({}) == len(data)
 
         print(str(self.collection.name) + ' recodes : ' + str(self.collection.find().count()), flush=True)
+        return len(data)
 
     ### 検索表示
     # 全データ表示
