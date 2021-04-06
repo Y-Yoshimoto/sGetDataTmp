@@ -38,7 +38,7 @@ function setSOQLRequest(){
 function ColumnsRegistration(){
     allColumnJq=$CnfFiles"/AllColumns.json"
     cat $CnfFiles/*Column.json | jq -s . > $allColumnJq
-    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" -o /dev/null http://accessormongo:5000/registration/sObjectColumns -d @./$allColumnJq
+    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://accessormongo:5000/registration/sObjectColumns -d @./$allColumnJq
 }
 
 function getSOQLData(){
@@ -69,7 +69,7 @@ function getSOQLData(){
 
 function dataRegistration(){
     #curl --noproxy "*" http://accessormongo:5000/healthCheck
-    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" -o /dev/null http://accessormongo:5000/registration/$1 -d @$dataJq
+    curl --noproxy "*" -sS -L -X POST -H "Content-Type: application/json" http://accessormongo:5000/registration/$1 -d @$dataJq
     return 0
 }
 
@@ -77,7 +77,8 @@ function dataUploadBox(){
     dataJq=$DataFiles"/"$1"_data.json"
     upDataJq=$1"_data.json"
     \cp -f $dataJq $UPLOADFOLDER"/"$upDataJq
-    curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/queryalldata/$upDataJq 
+    curl --noproxy "*" -sS -L -X POST http://boxuploader:5000/upload/queryalldata/$upDataJq 
+    curl --noproxy "*" -sS -L -X POST http://boxuploader:5000/upload/queryalldata/csv/$upDataJq 
     return 0
 }
 
@@ -88,7 +89,12 @@ function getPipeline(){
     # データベースからパイプラインクエリー結果を取得し保存
     curl --noproxy "*" -sS -L -X GET -o $upDataPath http://accessormongo:5000/data/pipeline/$1
     # Boxに取得結果を保存
-    curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/pipelinedata/$upDataJq 
+    #curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/pipelinedata/$upDataJq 
+    #curl --noproxy "*" -sS -L -X POST -o /dev/null http://boxuploader:5000/upload/pipelinedata/csv/$upDataJq 
+
+    curl --noproxy "*" -sS -L -X POST http://boxuploader:5000/upload/pipelinedata/$upDataJq 
+    curl --noproxy "*" -sS -L -X POST http://boxuploader:5000/upload/pipelinedata/csv/$upDataJq 
+
     echo $(dateFormat)", "$SECONDS", Update pipeline Data to Box, "$1
     return 0
 }

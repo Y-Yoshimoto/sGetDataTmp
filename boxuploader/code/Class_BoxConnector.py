@@ -50,12 +50,12 @@ class Connector:
         try:
             new_file = self.user_client.folder(folder_id).upload(filepath)
             #print(vars(new_file), flush=True)
-            return {'upload':0, 'id':new_file.id, 'status': 200}
+            return {'Type':'upload', 'id':new_file.id,'id':new_file.name, 'status': 200, 'API': 'Box Upload'}
      # ファイルを新バージョンとしてアップロード
         except BoxAPIException as ex:
             if ex.status == 409:
-                #print(ex.context_info['conflicts']['id'], flush=True)
+                print(ex.context_info['conflicts']['id'], flush=True)
                 updated_file = self.user_client.file(ex.context_info['conflicts']['id']).update_contents(filepath, etag=ex.context_info['conflicts']['etag'])
-                return {'update':0, 'id': ex.context_info['conflicts']['id'], 'status': 200}
+                return {'Type':'update', 'id': ex.context_info['conflicts']['id'], 'name': ex.context_info['conflicts']['name'], 'status': 200, 'API': 'Box Upload'}
             else:
                 return {'status':ex.status}
