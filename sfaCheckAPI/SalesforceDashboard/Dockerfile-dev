@@ -1,0 +1,19 @@
+#FROM node:latest
+FROM node:14-alpine
+LABEL maintaner='y-yoshimoto'
+ENV APPNAME SalesforceAdminDashboard
+
+RUN mkdir -p /$APPNAME/src && mkdir -p /$APPNAME/public
+WORKDIR /$APPNAME
+
+COPY ./package.json /$APPNAME/package.json
+RUN yarn install 
+
+# Remove Sample
+COPY ./src /$APPNAME/src
+COPY ./public /$APPNAME/public
+
+EXPOSE 3000 
+
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["yarn", "start"]

@@ -1,0 +1,75 @@
+version: "3"
+services:
+  ## Salesforce 監視データ取得
+  python:
+    image: python_dev
+    build: python_dev
+    # ports:
+    #  - "3000:3000"
+    # restart: always
+    environment:
+      TZ: ${TZ}
+      CONSUMER_ID: ${CONSUMER_ID}
+      USERNAME: ${USERNAME}
+      SalesforceAPIVersion: ${SalesforceAPIVersion}
+      ACCESS_KEY: ${ACCESS_KEY}
+      PYTHONDONTWRITEBYTECODE: 1
+    volumes:
+      - ./python_dev/src:/usr/src/
+
+  ## InfluxDB 時系列データ取得
+  influxdb_c:
+    image: influxdb_c
+    build: influxdb_c
+    restart: "always"
+    ports:
+      - "8086:8086"
+    logging:
+      driver: ${LOGDRIVER}
+    environment:
+      TZ: ${TZ}
+      DOCKER_INFLUXDB_INIT_MODE: "setup"
+      DOCKER_INFLUXDB_INIT_USERNAME: ${DOCKER_INFLUXDB_INIT_USERNAME}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${DOCKER_INFLUXDB_INIT_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}
+    #volumes:
+    #  - ./influxdb_c/data:/var/lib/influxdb2
+    #  - ./influxdb_c/config:/etc/influxdb2
+
+  ## Redis 最新値保管用
+  redis_c:
+    image: redis_c
+    build: redis_c
+    restart: "always"
+    expose:
+      - "6379"
+    logging:
+      driver: ${LOGDRIVER}
+    environment:
+      TZ: ${TZ}
+    #volumes:
+    #    - /radis_data:/data
+
+  ## 最新値取得格納用API
+  limitinfo_api:
+    build: limitinfo_api
+    image: limitinfo_api
+    restart: always
+    expose:
+      - "8040"
+    environment:
+      TZ: ${TZ}
+      ACCESS_KEY: ${ACCESS_KEY}
+    volumes:
+      - ./limitinfo_api/src/:/limitinfo_api/src/
+
+  ## リバースププロキシ
+  nrproxy:
+    image: nrproxy
+    build: nrproxy
+    restart: always
+    ports:
+      - "8280:80"
+      - "8281:443"

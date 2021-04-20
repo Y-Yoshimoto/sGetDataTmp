@@ -1,0 +1,13 @@
+-- Make Database
+CREATE DATABASE SfaTimebaseMetrics
+USE SfaTimebaseMetrics
+
+-- INSERT SfaLimitData,Item＝DataStorageMB Max=5 Using=2 UsageRate=40.0
+
+-- Show Database
+SHOW DATABASES
+
+-- 1597746439000000000
+-- 1610636463
+-- 1610636463000000000
+-- 1610636864.999436
