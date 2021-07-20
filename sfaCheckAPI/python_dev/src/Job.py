@@ -28,13 +28,27 @@ def GetLoginHistoryData(connection):
             LoginGeoId,TlsProtocol,CipherSuite,OptionsIsGet,OptionsIsPost,
             Browser,Platform,Status,Application,ClientVersion,ApiType,ApiVersion,CountryIso,
             AuthMethodReference+FROM+LoginHistory+WHERE+LoginTime+>+'''
-    SOQL += '2020-04-01T10:00:00-08:00'
+    SOQL += '2019-04-01T10:00:00-08:00'
     LoginHistory=connection.SOQLquery(SOQL)
-    # print(LoginHistory)
+    #print(LoginHistory)
+    print(len(LoginHistory))
     ## ユーザ情報
     SOQL='''SELECT+Id,Username,LastName,FirstName,Name,CompanyName,Division,Department,
         Title,Address,Email,Alias,IsActive,UserRoleId,ProfileId,
         UserType,LastLoginDate,CreatedDate+FROM+User+WHERE+IsActive=TRUE+LIMIT+1'''
-    Users=connection.SOQLquery(SOQL)
+    # Users=connection.SOQLquery(SOQL)
     # print(Users)
+
+## TESTJob
+def GetAccount(connection):
+    print(datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ", Get Account")
+    SOQL='''SELECT+Id,Name,CreatedDate+FROM+Contact+WHERE+CreatedDate+>+'''
+    SOQL += '2021-04-01T10:00:00-08:00'
+    #SOQL += '2019-04-01T10:00:00-08:00'
+    Contact=connection.SOQLquery(SOQL)
+    #print(Contact)
+    #print(len(Contact))
+    #connection.DataDell(Contact)
+
+
 

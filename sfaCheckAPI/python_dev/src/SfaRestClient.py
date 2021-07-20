@@ -69,14 +69,53 @@ class SfaConnection:
     ## SOQLクエリー
     def SOQLquery(self, SOQL):
         result = requests.get(
+            self.instance_url + '/services/data/' + self.apiVer +'/queryAll/?q=' + SOQL,
+            headers=self.baseHeaders
+        )
+        if result.status_code != 200:
+            print(vars(result))
+        ## リクエストデータ取り出し
+        response = result.json()
+        recodes = response['records']
+        ## nextRecordsUrl チェック/取得
+        if 'nextRecordsUrl' in response:
+            #print("Next")
+            recodes += self.SOQLqueryNext(response["nextRecordsUrl"])            
+        return recodes
+
+    ## nextRecordsUrlデータの取得
+    def SOQLqueryNext(self, nextRecordsUrl):
+        result = requests.get(
+            self.instance_url + nextRecordsUrl,
+            headers=self.baseHeaders
+        )
+        if result.status_code != 200:
+            print(vars(result))
+        ## リクエストデータ取り出し
+        response = result.json()
+        recodes = response['records']
+        ## nextRecordsUrl チェック/取得
+        if 'nextRecordsUrl' in response:
+            #print("Next")
+            recodes += self.SOQLqueryNext(response["nextRecordsUrl"])
+        return recodes
+
+
+    ## SOQLクエリー(Limit 2000)
+    def SOQLqueryLimit(self, SOQL):
+        result = requests.get(
             self.instance_url + '/services/data/' + self.apiVer +'/query/?q=' + SOQL,
             headers=self.baseHeaders
         )
         if result.status_code != 200:
             print(vars(result))
         response = result.json()
+
+        print((response.keys()))
+        print('nextRecordsUrl' in response)
         # nextRecordsUrl
         return response['records']
+
     ## 利用状況
     ### ページ別メトリクス
     def GetLightningUsageByPageMetrics(self):
@@ -111,3 +150,13 @@ class SfaConnection:
         if result.status_code != 200:
             print(vars(result))
         return result.json()
+
+
+    ## DataDell
+    #def DataDell(self, datas):
+    #    for data in datas:
+    #        print(data["Id"])
+    #        result = requests.delete(
+    #            self.instance_url + '/services/data/' + self.apiVer +'/sobjects/Contact/' + data["Id"],
+    #            headers=self.baseHeaders
+    #        )

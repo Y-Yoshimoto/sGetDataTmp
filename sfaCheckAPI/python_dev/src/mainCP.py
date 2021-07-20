@@ -21,7 +21,7 @@ def main():
 
     ## ローカルファイルモック
     #limitData=json.load(open('./limit.json', 'r'))
-    # print(str(limitData))
+    #print(str(limitData))
 
     # 取得値の整形
     limitInfo = SfaLimitProcessing.SfaLimitProcessing(limitData)
