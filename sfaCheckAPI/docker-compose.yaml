@@ -1,7 +1,7 @@
 version: "3"
 services:
   ## Salesforce 監視データ取得
-  python:
+  observation_app:
     image: python_dev
     build: python_dev
     # ports:
@@ -73,3 +73,31 @@ services:
     ports:
       - "8280:80"
       - "8281:443"
+
+  ## MongoDB
+  mongo:
+      image: mongodb_c
+      build: mongodb_c
+      restart: always
+      ports:
+          - 27017:27017
+      environment:
+          MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      #logging:
+      #    driver: ${LOGDRIVER}
+      #volumes:
+      #    - ./mongodb_data:/data/db
+      
+  mongo-express:
+      image: mongo-express
+      restart: always
+      ports:
+          - 8081:8081
+      environment:
+          ME_CONFIG_OPTIONS_EDITORTHEME: ${MONGO_OPTIONS_EDITORTHEME}
+          ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+          ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      logging:
+          driver: ${LOGDRIVER}

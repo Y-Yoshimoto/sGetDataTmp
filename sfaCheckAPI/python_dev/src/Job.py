@@ -29,14 +29,15 @@ def GetLoginHistoryData(connection):
             Browser,Platform,Status,Application,ClientVersion,ApiType,ApiVersion,CountryIso,
             AuthMethodReference+FROM+LoginHistory+WHERE+LoginTime+>+'''
     SOQL += '2019-04-01T10:00:00-08:00'
-    LoginHistory=connection.SOQLquery(SOQL)
+    LoginHistory=connection.SOQLgetQuery(SOQL)
     #print(LoginHistory)
     print(len(LoginHistory))
+    addMongodb(LoginHistory)
     ## ユーザ情報
     SOQL='''SELECT+Id,Username,LastName,FirstName,Name,CompanyName,Division,Department,
         Title,Address,Email,Alias,IsActive,UserRoleId,ProfileId,
         UserType,LastLoginDate,CreatedDate+FROM+User+WHERE+IsActive=TRUE+LIMIT+1'''
-    # Users=connection.SOQLquery(SOQL)
+    # Users=connection.SOQLgetQuery(SOQL)
     # print(Users)
 
 ## TESTJob
@@ -45,10 +46,15 @@ def GetAccount(connection):
     SOQL='''SELECT+Id,Name,CreatedDate+FROM+Contact+WHERE+CreatedDate+>+'''
     SOQL += '2021-04-01T10:00:00-08:00'
     #SOQL += '2019-04-01T10:00:00-08:00'
-    Contact=connection.SOQLquery(SOQL)
+    Contact=connection.SOQLgetQuery(SOQL)
     #print(Contact)
     #print(len(Contact))
     #connection.DataDell(Contact)
 
-
+def addMongodb(LoginHistory):
+    import MongoConnector.Connector as MongoC
+    MC = MongoC.Connector("HistoryDB")
+    MC.insertManydata("LoginHistory", LoginHistory)
+    items = MC.getCount("LoginHistory")
+    print(items)
 

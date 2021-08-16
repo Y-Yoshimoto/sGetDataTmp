@@ -26,7 +26,11 @@ def main():
     ## アクセストークン更新
     # schedule.every(10).minutes.do(lambda: connection.update_token())
     ## 制限値取得
-    schedule.every(12).minutes.do(lambda: Job.UpdateLimitData(connection))
+    schedule.every(5).minutes.do(lambda: Job.UpdateLimitData(connection))
+    #schedule.every(12).minutes.do(lambda: Job.UpdateLimitData(connection))
+
+    ## ログイン履歴の取得
+    #schedule.every(360).minutes.do(lambda: Job.GetLoginHistoryData(connection))
 
     while True:
         schedule.run_pending()
