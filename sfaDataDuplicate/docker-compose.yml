@@ -1,0 +1,56 @@
+version: "3"
+services:
+    duplicateapp:
+        image: duplicateapp
+        build: duplicateapp
+        restart: "no"
+        environment:
+            TZ: ${TZ}
+            # Box environment
+            BOX_USER_ID: ${BOX_USER_ID}
+            BOX_UPLOADFOLDER_ID: ${BOX_UPLOADFOLDER_ID}
+            BOX_PIPELINEDATA_ID: ${BOX_PIPELINEDATA_ID}
+            BOX_QUERYALLDATA_ID: ${BOX_QUERYALLDATA_ID}
+            BOX_AUTH: ${BOX_AUTH}
+            # Salesforce environment
+            SAF_CONSUMER_ID: ${SAF_CONSUMER_ID}
+            SAF_USERNAME: ${SAF_USERNAME}
+            SAF_SalesforceAPIVersion: ${SAF_SalesforceAPIVersion}
+            SAF_ACCESS_KEY_PASS: ${SAF_ACCESS_KEY_PASS}
+            SAF_ACCESS_PEM: ${SAF_ACCESS_PEM}
+            # Other
+            PYTHONDONTWRITEBYTECODE: 1
+        volumes:
+            - ./uploadvolume:/uploadvolume
+            - ./duplicateapp/src:/usr/src/
+
+    mongo:
+        image: mongodb_c
+        build: mongodb_c
+        restart: always
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: "sObjectData"
+        #logging:
+        #    driver: ${LOGDRIVER}
+        #volumes:
+        #    - ./mongodb_data:/data/db
+
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_OPTIONS_EDITORTHEME: ${MONGO_OPTIONS_EDITORTHEME}
+            ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+            ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+            ME_CONFIG_MONGODB_URL: ${MONGO_ROOT_URL}
+        logging:
+            driver: ${LOGDRIVER}
+
+#volumes:
+#    uploadvolume:
