@@ -4,6 +4,9 @@ from boxsdk import Client, JWTAuth
 from boxsdk.exception import BoxAPIException
 import os
 
+# 409警告抑止
+import warnings
+
 # Boxコネクター
 class Connector: 
     def __init__(self, authfile:str = os.environ['BOX_AUTH'],
@@ -58,14 +61,13 @@ class Connector:
     # Type: dictionary
     # ファイルを指定のフォルダー内にアップロード 同一名の場合は新バージョンとしてアップデート
     def uploadFile(self, folder_id, filepath):
+        print(f'Start Update {filepath}.') 
         try:
             new_file = self.user_client.folder(folder_id).upload(filepath)
-            #print(vars(new_file), flush=True)
             return {'Type':'upload', 'id':new_file.id,'id':new_file.name, 'status': 200, 'API': 'Box Upload'}
     # ファイルを新バージョンとしてアップロード
         except BoxAPIException as ex:
             if ex.status == 409:
-                #print(ex.context_info['conflicts']['id'], flush=True)
                 updated_file = self.user_client.file(ex.context_info['conflicts']['id']).update_contents(filepath, etag=ex.context_info['conflicts']['etag'])
                 print(f'Success Update {filepath}.') 
                 return {'Type':'update', 'id': ex.context_info['conflicts']['id'], 'name': ex.context_info['conflicts']['name'], 'status': 200, 'API': 'Box Upload'}

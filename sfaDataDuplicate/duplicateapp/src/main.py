@@ -12,9 +12,9 @@ import BoxConnector.BoxConnector as BoxC
 # Boxコネクター接続
 import DataJobs as DataJobs
 
-
 #  補助関数読み込み
 import subFunctions as sub
+
 
 def main():
     print(f'{sub.nowdate()}, Info, Start.')
@@ -23,16 +23,21 @@ def main():
     
     DataJob = DataJobs.MakeDataJobs()
     print(f'{sub.nowdate()}, Info, List Up Columns.')
-    DataJob.ListUpColumns(sObjectsList)
+    #DataJob.ListUpColumns(sObjectsList)
     
+    # データ取得タスク設定
     print(f'{sub.nowdate()}, Info, Get sObject Data.')
-    taskList = [{"sObject": "Account", "SOQL": "SELECT Id, Name, OwnerId FROM Account"}, 
-                {"sObject": "Contact", "SOQL": "SELECT Id, Name, OwnerId FROM Contact"},
-                {"sObject": "Contact", "SOQL": "SELECT Id, Name, OwnerId FROM Contact"}]
-    DataJob.GetsObjectData(taskList)
+    getDataTask = sub.readJson("./task/getDataTask.json")
+    #print(str(getDataTask))
+    #DataJob.GetsObjectData(getDataTask)
+    
+    # MongoDBデータ取得タスク設定
+    print(f'{sub.nowdate()}, Info, Query MongoDB.')
+    queryDataTask = sub.readJson("./task/queryDataTask.json")
+    #print(str(queryDataTask))
+    DataJob.QueryMongoDBData(queryDataTask)   
 
     print(f'{sub.nowdate()}, Info, End.') 
-
 
 if __name__ == '__main__':
     main()

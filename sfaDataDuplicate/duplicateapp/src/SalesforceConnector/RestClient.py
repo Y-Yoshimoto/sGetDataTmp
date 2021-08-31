@@ -91,7 +91,13 @@ class SfaConnection:
         if 'nextRecordsUrl' in response:
             #print("Next")
             recodes += self.SOQLRecursiveCall(response["nextRecordsUrl"])
-        return recodes
+        return [self._＿DellAttributes(recode) for recode in recodes]
+        
+    def _＿DellAttributes(self, data: dict):
+        """Attributes データを除外"""
+        data.pop('attributes', None)
+        return data
+        
 
     ## SOQLクエリー(Limit 2000)
     def SOQLqueryLimit(self, SOQL, limit):
