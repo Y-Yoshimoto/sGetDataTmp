@@ -16,10 +16,10 @@ logger = getLogger(__name__)
 class Connector:
     """MongoDBコネクター"""
     def __init__ (self, 
-                    databaseName:str = 'sObjectData',
-                    endpoint:str = 'mongodb://mongo:27017/',
-                    user:str = 'sObjectDataAdmin', 
-                    password:str = 'Password01'):
+                    databaseName:str = os.environ['MONGO_DATABASE'],
+                    endpoint:str = os.environ['MONGO_ROOTURL'],
+                    user:str = os.environ['MONGO_EDITORTHEME'], 
+                    password:str = os.environ['MONGO_EDITORPASS']):
         ## DBへの接続と認証
         ### 接続先MongoDBの指定
         self._client = pymongo.MongoClient(endpoint)

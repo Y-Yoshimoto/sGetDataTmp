@@ -3,3 +3,4 @@
 *.csr
 .env
 *.config.json
+*.csv
