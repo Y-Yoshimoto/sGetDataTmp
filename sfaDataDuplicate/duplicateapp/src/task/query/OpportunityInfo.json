@@ -1,0 +1,29 @@
+{
+    "mainCollection": "Opportunity",
+    "pipeline": [
+        {
+            "$lookup": {
+                "from": "User",
+                "localField": "OwnerId",
+                "foreignField": "Id",
+                "as": "User"
+            }
+        },
+        {
+            "$unwind": "$User"
+        },
+        {
+            "$project": {
+                "Id": "$Id",
+                "Name": "$Name",
+                "AccountId": "$AccountId",
+                "Amount": "$Amount",
+                "StageName": "$StageName",
+                "CloseDate": "$CloseDate",
+                "OwnerName": "$User.Name",
+                "OwnerEmail": "$User.Email",
+                "_id": 0
+            }
+        }
+    ]
+}

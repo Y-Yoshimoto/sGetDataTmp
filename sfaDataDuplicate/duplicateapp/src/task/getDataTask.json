@@ -1,0 +1,34 @@
+[
+    {
+        "sObject": "Account",
+        "SOQL": "SELECT Id, Name, OwnerId FROM Account",
+        "MongoDBIndex": [
+            "Id",
+            "OwnerId"
+        ]
+    },
+    {
+        "sObject": "Contact",
+        "SOQL": "SELECT Id, Name, OwnerId, AccountId FROM Contact",
+        "MongoDBIndex": [
+            "Id",
+            "OwnerId"
+        ]
+    },
+    {
+        "sObject": "Opportunity",
+        "SOQL": "SELECT Id, Name, OwnerId, Amount, StageName, CloseDate FROM Opportunity",
+        "MongoDBIndex": [
+            "Id",
+            "OwnerId"
+        ]
+    },
+    {
+        "sObject": "User",
+        "SOQL": "SELECT Id, Firstname,Lastname, Email FROM User",
+        "MongoDBIndex": [
+            "Id",
+            "Email"
+        ]
+    }
+]

@@ -1,0 +1,14 @@
+{
+    "name": "Sample",
+    "boxFolderID": "144650932371",
+    "tasks": [
+        {
+            "label": "取引先責任者",
+            "query": "./task/query/ContactInfo.json"
+        },
+        {
+            "label": "商談",
+            "query": "./task/query/OpportunityInfo.json"
+        }
+    ]
+}

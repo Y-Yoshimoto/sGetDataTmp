@@ -1,0 +1,26 @@
+{
+    "mainCollection": "Contact",
+    "pipeline": [
+        {
+            "$lookup": {
+                "from": "User",
+                "localField": "OwnerId",
+                "foreignField": "Id",
+                "as": "User"
+            }
+        },
+        {
+            "$unwind": "$User"
+        },
+        {
+            "$project": {
+                "Id": "$Id",
+                "Name": "$Name",
+                "AccountId": "$AccountId",
+                "OwnerName": "$User.Name",
+                "OwnerEmail": "$User.Email",
+                "_id": 0
+            }
+        }
+    ]
+}
