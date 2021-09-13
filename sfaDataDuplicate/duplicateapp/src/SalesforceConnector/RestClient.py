@@ -187,16 +187,46 @@ class SfaConnection:
         # リクエストデータ生成
         for data in datas:
             data["attributes"] = {"type" : sObjects}
-        print({"records": datas})
-        print("")
+        #print({"records": datas})
         # APIコール
         result = requests.patch(
             self.instance_url + '/services/data/' + self.apiVer + "/composite/sObjects/",
             headers=self.baseHeaders,
             data=json.dumps({"allOrNone" : True,"records": datas})
         )
-        print(vars(result))
-        return 0#(result.status_code, json.loads(result.text))
+        #print(vars(result))
+        return (result.status_code, json.loads(result.text))
+
+
+    ## 外部IDデータ更新/追加 ######################################################
+    ### 1レコード更新
+    def upsertRecodeExid(self, sObjects, ExidColumn, data):
+        Exid = str(data.pop(ExidColumn))
+        result = requests.patch(
+            self.instance_url + '/services/data/' + self.apiVer + "/sobjects/" + sObjects + "/" + ExidColumn + "/" + Exid,
+            headers=self.baseHeaders,
+            data=json.dumps(data)
+        )
+        #print(vars(result))
+        if result.text == "":
+            return (204, {'id': id, 'success': True, 'errors': []})
+        return (result.status_code, json.loads(result.text))
+    ### 複数レコード更新
+    def bulkUpsertRecodeExid(self, sObjects, ExidColumn, datas):
+        if len(datas) > 200:
+            return (500, {'success': False, 'errors': ["Over 200 recode"]})
+        # リクエストデータ生成
+        for data in datas:
+            data["attributes"] = {"type" : sObjects}
+        #print({"records": datas})
+        # APIコール
+        result = requests.patch(
+            self.instance_url + '/services/data/' + self.apiVer + "/composite/sObjects/" + sObjects + "/" + ExidColumn,
+            headers=self.baseHeaders,
+            data=json.dumps({"allOrNone" : True,"records": datas})
+        )
+        #print(vars(result))
+        return (result.status_code, json.loads(result.text))
 
 
     ## 利用状況
