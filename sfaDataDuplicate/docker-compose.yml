@@ -9,8 +9,8 @@ services:
             # Box environment
             BOX_USER_ID: ${BOX_USER_ID}
             BOX_UPLOADFOLDER_ID: ${BOX_UPLOADFOLDER_ID}
-            BOX_PIPELINEDATA_ID: ${BOX_PIPELINEDATA_ID}
-            BOX_QUERYALLDATA_ID: ${BOX_QUERYALLDATA_ID}
+            #BOX_PIPELINEDATA_ID: ${BOX_PIPELINEDATA_ID}
+            #BOX_QUERYALLDATA_ID: ${BOX_QUERYALLDATA_ID}
             BOX_AUTH: ${BOX_AUTH}
             # Salesforce environment
             SAF_CONSUMER_ID: ${SAF_CONSUMER_ID}

@@ -1,0 +1,15 @@
+{
+    "mainCollection": "User",
+    "pipeline": [
+        {
+            "$project": {
+                "Id": "$Id",
+                "Name": "$Name",
+                "Firstname": "$Firstname",
+                "Lastname": "$Lastname",
+                "Email": "$Email",
+                "_id": 0
+            }
+        }
+    ]
+}

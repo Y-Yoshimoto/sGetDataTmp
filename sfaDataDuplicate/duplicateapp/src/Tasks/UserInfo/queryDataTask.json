@@ -1,0 +1,10 @@
+{
+    "name": "UserInfo",
+    "boxFolderID": "146361628171",
+    "tasks": [
+        {
+            "label": " ユーザー",
+            "query": "./Tasks/UserInfo/query/UserInfo.json"
+        }
+    ]
+}

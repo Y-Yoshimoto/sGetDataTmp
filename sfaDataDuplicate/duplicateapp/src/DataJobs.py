@@ -49,7 +49,15 @@ class MakeDataJobs:
         # MongoDB登録
         self.mongoc.reCreateCollection("sObjectColumns", columnsList)
         
-    ## Job実行 #########################
+    def sObjectList(self) -> list:
+        """オブジェクトリスト生成"""
+        sObjectList = self.sfac.sObjectList()
+        # Boxアップロード
+        self.UploadCsvFileCurrent("sObjectList", sObjectList)
+        # MongoDB登録
+        self.mongoc.reCreateCollection("sObjectList", sObjectList)
+        
+    ## Salesforceデータ取得 #########################
     def GetsObjectData(self, taskList: list):
         """データ取得ジョブ"""
         for task in taskList:
@@ -63,6 +71,7 @@ class MakeDataJobs:
             ## MongoDBインデックス追加
             [ self.mongoc.addIndex(task["sObject"],Index) for Index in task["MongoDBIndex"] ]
         
+    ## Boxデータ設置 #########################
     def QueryMongoDBData(self, queryList: list):
         """MongoDBデータ出力"""
         print(f'{sub.nowdate()}, Info, Start {queryList["name"]} Querys.')
@@ -74,7 +83,16 @@ class MakeDataJobs:
             datas = self.mongoc.pipelineQuery(query)
             # CSV出力/Boxアップロード
             self.UploadCsvFile(task["label"], boxFolderID ,datas)
+   
+    def DataSourceTask(self, taskList: list):
+        """Boxデータソース作成タスク"""
+        print(f'{sub.nowdate()}, Info, Start DataSource Task.')
+        for queryList in taskList:
+            queryTaskJson="./Tasks/" + str(queryList) + "/queryDataTask.json"
+            self.QueryMongoDBData(queryList=sub.readJson(queryTaskJson))
+        
+    ## 特殊タスク #########################
+    #def ChatterBlend(self):
         
         
-        
-        
+    #def upsertLoginHistory(self)

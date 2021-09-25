@@ -116,6 +116,15 @@ class SfaConnection:
         # nextRecordsUrl
         return response['records']
 
+    ## sObjexts一覧取得
+    def sObjectList(self):
+        result = requests.get(
+            self.instance_url + '/services/data/' + self.apiVer +'/sobjects/',
+            headers=self.baseHeaders
+        )
+        response = result.json()
+        return response['sobjects']
+
     ## sObjectsカラム取得
     def sObjectColumns(self, sObjects):
         #print(self.instance_url + '/services/data/' + self.apiVer +'/sobjects/' + sObjects + '/describe/')
@@ -133,7 +142,6 @@ class SfaConnection:
                     'label':column["label"],
                     'soapType':column["soapType"],
                     'type':column["type"]} for column in response['fields'] ]
-                
         return columns
         #yield columns
 

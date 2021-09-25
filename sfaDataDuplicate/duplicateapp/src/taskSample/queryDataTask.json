@@ -4,11 +4,11 @@
     "tasks": [
         {
             "label": "取引先責任者",
-            "query": "./task/query/ContactInfo.json"
+            "query": "./taskSample/query/ContactInfo.json"
         },
         {
             "label": "商談",
-            "query": "./task/query/OpportunityInfo.json"
+            "query": "./taskSample/query/OpportunityInfo.json"
         }
     ]
 }

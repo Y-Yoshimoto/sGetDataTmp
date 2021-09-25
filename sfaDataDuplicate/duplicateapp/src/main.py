@@ -19,23 +19,21 @@ import subFunctions as sub
 def main():
     print(f'{sub.nowdate()}, Info, Start.')
     
-    sObjectsList = ["Account","Opportunity","Contact"]
-    
+    # データ操作インスタンス起動
     DataJob = DataJobs.MakeDataJobs()
-    print(f'{sub.nowdate()}, Info, List Up Columns.')
-    #DataJob.ListUpColumns(sObjectsList)
     
-    # データ取得タスク設定
-    print(f'{sub.nowdate()}, Info, Get sObject Data.')
-    getDataTask = sub.readJson("./task/getDataTask.json")
-    #print(str(getDataTask))
-    #DataJob.GetsObjectData(getDataTask)
+    # データ取得タスク設定 ##########################################
+    print(f'{sub.nowdate()}, Info, Get sObject Datas.')
+    # 基本データ取得    
+    #DataJob.GetsObjectData(sub.readJson("./GetData/BasicData.json"))
     
-    # MongoDBデータ取得タスク設定
-    print(f'{sub.nowdate()}, Info, Query MongoDB.')
-    queryDataTask = sub.readJson("./task/queryDataTask.json")
-    #print(str(queryDataTask))
-    DataJob.QueryMongoDBData(queryDataTask)   
+    # データソース作成 #############################################
+    print(f'{sub.nowdate()}, Info, Query MongoDB and make DataSources.')
+    # User情報
+    #DataJob.QueryMongoDBData(sub.readJson("./Tasks/UserInfo/queryDataTask.json"))   
+    # 実行タスク宣言
+    taskList=["UserInfo"]
+    DataJob.DataSourceTask(taskList=taskList)
 
     print(f'{sub.nowdate()}, Info, End.') 
 
