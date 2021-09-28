@@ -1,0 +1,22 @@
+[
+    {
+        "sObject": "FeedItem",
+        "SOQL": "SELECT Id, ParentId, Type, CreatedById, CreatedDate, IsDeleted, LastModifiedDate, SystemModstamp, Revision, LastEditById, LastEditDate, CommentCount, LikeCount, Title, Body, LinkUrl, IsRichText, RelatedRecordId, InsertedById, BestCommentId, HasContent, HasLink, HasFeedEntity, HasVerifiedComment, IsClosed, Status  FROM FeedItem ",
+        "MongoDBIndex": [
+            "Id",
+            "ParentId",
+            "CreatedById",
+            "RelatedRecordId"
+        ]
+    },
+    {
+        "sObject": "FeedComment",
+        "SOQL": "SELECT Id, FeedItemId, ParentId, CreatedById, CreatedDate, SystemModstamp, Revision, LastEditById, LastEditDate, CommentBody, IsDeleted, InsertedById, CommentType, RelatedRecordId, IsRichText, IsVerified, HasEntityLinks, Status, ThreadParentId, ThreadLevel, ThreadChildrenCount, ThreadLastUpdatedDate FROM FeedComment",
+        "MongoDBIndex": [
+            "Id",
+            "FeedItemId",
+            "ParentId",
+            "CreatedById"
+        ]
+    }
+]

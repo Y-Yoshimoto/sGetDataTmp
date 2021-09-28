@@ -1,0 +1,27 @@
+{
+    "mainCollection": "FeedComment",
+    "pipeline": [
+        {
+            "$lookup": {
+                "from": "User",
+                "localField": "CreatedById",
+                "foreignField": "Id",
+                "as": "User"
+            }
+        },
+        {
+            "$unwind": "$User"
+        },
+        {
+            "$project": {
+                "Id": "$Id",
+                "Title": "",
+                "Body": "$CommentBody",
+                "Type": "$CommentType",
+                "IsRichText": "$IsRichText",
+                "CreatedDate": "$CreatedDate",
+                "_id": 0
+            }
+        }
+    ]
+}

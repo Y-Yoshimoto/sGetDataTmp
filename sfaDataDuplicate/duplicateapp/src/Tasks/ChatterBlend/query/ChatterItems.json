@@ -1,0 +1,27 @@
+{
+    "mainCollection": "FeedItem",
+    "pipeline": [
+        {
+            "$lookup": {
+                "from": "User",
+                "localField": "CreatedById",
+                "foreignField": "Id",
+                "as": "User"
+            }
+        },
+        {
+            "$unwind": "$User"
+        },
+        {
+            "$project": {
+                "Id": "$Id",
+                "Title": "$Title",
+                "Body": "$Body",
+                "Type": "$Type",
+                "IsRichText": "$IsRichText",
+                "CreatedDate": "$CreatedDate",
+                "_id": 0
+            }
+        }
+    ]
+}

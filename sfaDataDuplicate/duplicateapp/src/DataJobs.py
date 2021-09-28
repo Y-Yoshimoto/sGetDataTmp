@@ -71,6 +71,14 @@ class MakeDataJobs:
             ## MongoDBインデックス追加
             [ self.mongoc.addIndex(task["sObject"],Index) for Index in task["MongoDBIndex"] ]
         
+    def GetDataTask(self, taskList: list):
+        """データ取得タスク"""
+        print(f'{sub.nowdate()}, Info, Start GetData Task.')
+        for sObject in taskList:
+            sObjectJson="./GetData/" + str(sObject) + ".json"
+            self.GetsObjectData(taskList=sub.readJson(sObjectJson))
+            
+        
     ## Boxデータ設置 #########################
     def QueryMongoDBData(self, queryList: list):
         """MongoDBデータ出力"""
@@ -92,7 +100,54 @@ class MakeDataJobs:
             self.QueryMongoDBData(queryList=sub.readJson(queryTaskJson))
         
     ## 特殊タスク #########################
-    #def ChatterBlend(self):
+    def ChatterBlend(self):
+        """"Cahher投稿とChatterコメントの複合データソースを作成"""
+        """
+        print(f'{sub.nowdate()}, Info, Get Chatter Data.')
+        ChatterData=[]
+        
+        taskList=sub.readJson("./GetData/FeedData.json")
+        FeedItemJob = next(x for x in taskList if x["sObject"] == "FeedItem")
+        FeedCommentJob = next(x for x in taskList if x["sObject"] == "FeedComment")
+        
+        
+        FeedCommentData = self.sfac.SOQLgetQuery(FeedCommentJob["SOQL"])
+        
+  
+        FeedItemData += self.sfac.SOQLgetQuery(FeedItemJob["SOQL"])
+
+        ChatterData = FeedCommentData + FeedItemData;        
+        #print(str(FeedItemSOQL))
+        #print(str(FeedCommentSOQL))
+        
+        # CSV出力/Boxアップロード
+        #self.UploadCsvFileCurrent("Chatter", ChatterData)
+        # MongoDB登録
+        self.mongoc.reCreateCollection("Chatter", ChatterData)
+        ## MongoDBインデックス追加
+        #[ self.mongoc.addIndex("Chatter",Index) for Index in FeedCommentJob["MongoDBIndex"] ]
+        #[ self.mongoc.addIndex("Chatter",Index) for Index in FeedItemJob["FeedComment"] ]
+        #for task in taskList:
+        #    datas = self.sfac.SOQLgetQuery(task["SOQL"])
+        """
+        
+        print(f'{sub.nowdate()}, Info, Start ChatterBlend Task.')
+        queryTaskJson=sub.readJson("./Tasks/ChatterBlend/queryDataTask.json")
+        print(str(queryTaskJson))
+        boxFolderID = queryTaskJson["boxFolderID"]
+        ChatterData=[]
+        for task in queryTaskJson["tasks"]:
+            # クエリー読み込み
+            query = sub.readJson(task["query"])
+            # MongoDBクエリーデータ取得取得
+            datas = self.mongoc.pipelineQuery(query)
+            self.UploadCsvFile(task["label"], boxFolderID ,datas)
+            ChatterData += datas
+
+        print(len(ChatterData))
+
+        # CSV出力/Boxアップロード
+        self.UploadCsvFile("Cahtter", boxFolderID, ChatterData)
         
         
     #def upsertLoginHistory(self)

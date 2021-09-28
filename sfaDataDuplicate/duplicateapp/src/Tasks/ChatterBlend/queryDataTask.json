@@ -1,0 +1,14 @@
+{
+    "name": "Chatterデータ",
+    "boxFolderID": "146715918625",
+    "tasks": [
+        {
+            "label": "Chatter投稿",
+            "query": "./Tasks/ChatterBlend/query/ChatterItems.json"
+        },
+        {
+            "label": "Chatterコメント",
+            "query": "./Tasks/ChatterBlend/query/ChatterComments.json"
+        }
+    ]
+}

@@ -25,20 +25,16 @@ def main():
     # データ取得タスク設定 ##########################################
     print(f'{sub.nowdate()}, Info, Get sObject Datas.')
     # 基本データ取得
-    getTaskList=["BasicData", "FeedData"]
-    DataJob.GetDataTask(taskList=getTaskList)
-    #DataJob.GetsObjectData(sub.readJson("./GetData/BasicData.json"))
+    #getTaskList=["BasicData"]
+    #DataJob.GetDataTask(taskList=getTaskList)
+    #DataJob.GetsObjectData(sub.readJson("./GetData/FeedData.json"))
+    
+    DataJob.ChatterBlend()
     
     # データソース作成 #############################################
     print(f'{sub.nowdate()}, Info, Query MongoDB and make DataSources.')
     
-    # 実行タスク定義
-    queryTaskList=["UserInfo"]
-    DataJob.DataSourceTask(taskList=queryTaskList)
 
-    # 特殊タスク実行
-    ## Chatterの複合データソース作成
-    DataJob.ChatterBlend()
 
     print(f'{sub.nowdate()}, Info, End.') 
 
