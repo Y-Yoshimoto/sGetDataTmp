@@ -34,10 +34,17 @@ class MakeDataJobs:
         self.boxc.uploadCurrentFolderFile(csvFilename)
         
     def UploadCsvFile(self, filenameBase: str, folderId: int, Datas: list):
-        """CSV出力し指定フォルダーにアップロード"""
+        """CSV出力しカレントフォルダーにアップロード"""
         csvFilename = "/uploadvolume/" + filenameBase + ".csv"
         sub.writerCsv(csvFilename,Datas)
         self.boxc.uploadFile(folderId,csvFilename)
+        
+    ## JSONファイル出力/アップロード #########################
+    def UploadJsonFile(self, filenameBase: str, folderId: int, Datas: list):
+        """JSON出力し指定フォルダーにアップロード"""
+        jsonFilename = "/uploadvolume/" + filenameBase + ".json"
+        sub.writerJson(jsonFilename,Datas)
+        self.boxc.uploadFile(folderId,jsonFilename)
         
     ## 初期データ作成 #########################
     def ListUpColumns(self, sObjectsList: list):
@@ -102,35 +109,6 @@ class MakeDataJobs:
     ## 特殊タスク #########################
     def ChatterBlend(self):
         """"Cahher投稿とChatterコメントの複合データソースを作成"""
-        """
-        print(f'{sub.nowdate()}, Info, Get Chatter Data.')
-        ChatterData=[]
-        
-        taskList=sub.readJson("./GetData/FeedData.json")
-        FeedItemJob = next(x for x in taskList if x["sObject"] == "FeedItem")
-        FeedCommentJob = next(x for x in taskList if x["sObject"] == "FeedComment")
-        
-        
-        FeedCommentData = self.sfac.SOQLgetQuery(FeedCommentJob["SOQL"])
-        
-  
-        FeedItemData += self.sfac.SOQLgetQuery(FeedItemJob["SOQL"])
-
-        ChatterData = FeedCommentData + FeedItemData;        
-        #print(str(FeedItemSOQL))
-        #print(str(FeedCommentSOQL))
-        
-        # CSV出力/Boxアップロード
-        #self.UploadCsvFileCurrent("Chatter", ChatterData)
-        # MongoDB登録
-        self.mongoc.reCreateCollection("Chatter", ChatterData)
-        ## MongoDBインデックス追加
-        #[ self.mongoc.addIndex("Chatter",Index) for Index in FeedCommentJob["MongoDBIndex"] ]
-        #[ self.mongoc.addIndex("Chatter",Index) for Index in FeedItemJob["FeedComment"] ]
-        #for task in taskList:
-        #    datas = self.sfac.SOQLgetQuery(task["SOQL"])
-        """
-        
         print(f'{sub.nowdate()}, Info, Start ChatterBlend Task.')
         queryTaskJson=sub.readJson("./Tasks/ChatterBlend/queryDataTask.json")
         print(str(queryTaskJson))
@@ -143,11 +121,37 @@ class MakeDataJobs:
             datas = self.mongoc.pipelineQuery(query)
             self.UploadCsvFile(task["label"], boxFolderID ,datas)
             ChatterData += datas
-
         print(len(ChatterData))
-
         # CSV出力/Boxアップロード
-        self.UploadCsvFile("Cahtter", boxFolderID, ChatterData)
+        self.UploadCsvFile("Cahtter", boxFolderID ,ChatterData)
         
         
-    #def upsertLoginHistory(self)
+    def upsertLoginHistory(self):
+        """ログイン履歴データの更新"""
+        print(f'{sub.nowdate()}, Info, Update LoginHistory Data.')
+        ## ログイン履歴(指定日以降のデータを取得)
+        MaxLoginTime = self._CheckMaxMongodb("LoginHistory", "LoginTime")
+        SOQL='''SELECT+Id,UserId,LoginTime,LoginType,SourceIp,LoginUrl,Status,ApiType,Browser,Platform,CountryIso+FROM+LoginHistory+WHERE+LoginTime+>+'''
+        if MaxLoginTime is None:
+            MaxLoginTime = '2019-04-01T10:00:00Z'
+            SOQL += MaxLoginTime
+            LoginHistory = self.sfac.SOQLgetQuery(SOQL)
+            print(len(LoginHistory))
+            # MongoDB登録
+            self.mongoc.reCreateCollection("LoginHistory", LoginHistory)
+            ## MongoDBインデックス追加
+            [ self.mongoc.addIndex("LoginHistory",Index) for Index in ["Id", "UserId", "LoginTime"] ]
+        else: 
+            SOQL += MaxLoginTime
+            LoginHistory = self.sfac.SOQLgetQuery(SOQL)
+            print(len(LoginHistory))
+            print(len(LoginHistory))
+            self.mongoc.insertManydata("LoginHistory", LoginHistory)
+        
+        
+    def _CheckMaxMongodb(self, collection, column):
+        MaxValue = self.mongoc.searchMaxValue(collection, column)
+        print(MaxValue)
+        if MaxValue  is None:
+            return "2020-04-01T00:00:00Z"
+        return MaxValue[0:19] + "Z"

@@ -38,6 +38,7 @@ def main():
 
     # 特殊タスク実行
     ## Chatterの複合データソース作成
+    DataJob.upsertLoginHistory()
     DataJob.ChatterBlend()
 
     print(f'{sub.nowdate()}, Info, End.') 

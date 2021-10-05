@@ -133,7 +133,7 @@ class Connector:
         return self._searchLimitValue(collectionName, column, 1)
 
     def searchMaxValue(self, collectionName: str, column: str):
-        """指定したカラム内の最小値を取得"""
+        """指定したカラム内の最大値を取得"""
         return self._searchLimitValue(collectionName, column, -1)
 
     def _searchLimitValue(self, collectionName: str, column: str, sort: int):

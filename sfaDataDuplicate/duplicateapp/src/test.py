@@ -29,7 +29,7 @@ def main():
     #DataJob.GetDataTask(taskList=getTaskList)
     #DataJob.GetsObjectData(sub.readJson("./GetData/FeedData.json"))
     
-    DataJob.ChatterBlend()
+    DataJob.upsertLoginHistory()
     
     # データソース作成 #############################################
     print(f'{sub.nowdate()}, Info, Query MongoDB and make DataSources.')
